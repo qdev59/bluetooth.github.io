@@ -1,64 +1,27 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-
-    <title>Test bluetooth</title>
-
-  </head>
-
-  <body>
-    <h1>Test bluetooth</h1>
-
-	<button id="btnInfos">Get infos</button>
-	<p id="infos"></p>
-	
-	<button id="btnDevices">Get devices</button>
-	<p id="devices"></p>
-
-    <script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA MBDD</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+</head>
 
 
-		document.querySelector('#btnInfos').addEventListener('click', event => {
-		
-			navigator.bluetooth.requestDevice({ 
-				acceptAllDevices:true,
-				optionalServices: ['battery_service']
-			})
-			.then(device => {
-				console.log(device.name + " : " + device.id);
-				document.querySelector('#infos').innerHTML += "<br/>" + device.name + " : " + device.id;
-				return device.gatt.connect();
-			})
-			.then(server => {
-			  console.log('Getting Battery Service…');
-			  return server.getPrimaryService('battery_service');
-			})
-			.then(service => {
-			  console.log('Getting Battery Level Characteristic…');
-			  return service.getCharacteristic('battery_level');
-			})
-			.then(characteristic => {
-			  console.log("Reading Battery Level…");
-			  return characteristic.readValue();
-			})
-			.then(value => {
-			  console.log(`Battery percentage is ${value.getUint8(0)}`);
-			})
-		});
-		
-		document.querySelector('#btnDevices').addEventListener('click', event => {
-		
-			navigator.bluetooth.getDevices()
-			.then(devices => {
-				document.querySelector('#devices').innerHTML = devices.length + " device(s) : "
-				devices.forEach(device => {
-					document.querySelector('#devices').innerHTML += "<br/>" + device.name + " : " + device.id;
-				})
-				console.log(devices);
-			});
-		});
-    </script>
-  </body>
+<body>
+    
+    <div style="text-align: center;">
+        <h2>Appel de l'API GeoMob depuis la PWA de démo</h2>
+    </div>
+    <div style="text-align: center;">
+        <button id="btnAppelerAPI">GET /position</button>
+    </div>
+    <ul id="liste-champs-valeurs-json"></ul>
+
+
+    <script type="module" src="app.js"></script>
+</body>
+
+
 </html>
-
